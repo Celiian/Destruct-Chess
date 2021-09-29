@@ -40,6 +40,7 @@ public class Main {
         }
     }
 
+    //Affichage du menu principal puis choix des options dde jeu
     public static void menuPrincipal() {
         String[][] tableau = tableZero();
         boolean fin = false;
@@ -86,17 +87,17 @@ public class Main {
     }
 
 
-
+    //Permet d'afficher le tableau actuel
     public static void affichageTableau(String tableau[][]) {
         for (int j = 0; j < 11; j++) {
-            System.out.print( j );
+            System.out.print( j + 1 );
             System.out.print( "  " );
         }
         System.out.println("");
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 11; j++) {
                 System.out.print(tableau[i][j] + " " );
-            }System.out.print(i);
+            }System.out.print(i + 1);
             System.out.println("");
         }
     }
@@ -121,29 +122,145 @@ public class Main {
 
 
     public static void Jeu(){
+        boolean jeuFinis = false;
+        int joueur = joueurStart();
         String[][] tableau = tableZero();
         affichageTableau(tableau);
 
-
+        while (jeuFinis == false) {
+            deplacementJoueur(tableau, joueur);
+            destructionCase(tableau);
+           if (joueur == 1){
+               joueur = 2;
+           }
+           else {
+               joueur = 1;
+           }
+        }
     }
 
 
-    public static void deplacementJoueur(){
-        System.out.println("Déplacez votre pion : ");
-        System.out.println("Appuez sur 1 pour aller a gauche");
-        System.out.println("Appuez sur 2 pour aller en haut");
-        System.out.println("Appuez sur 3 pour aller en bas");
-        System.out.println("Appuez sur 4 pour aller a droite");
-        int déplacement = sc.nextInt();
 
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 11; j++) {
-                
-            }
+    public static int joueurStart(){
+        boolean MeruemCommence = (Math.random() < 0.5);
+        int joueur = 0;
+        if (MeruemCommence) {
+            joueur = 1;
+            System.out.println("Meruem commence");
+        } else {
+            joueur = 2;
+            System.out.println("Komugi commence");
+        }
+        return joueur;
+    }
+
+
+    public static void deplacementJoueur(String tableau[][],int joueur){
+
+
+        String couleurJoueur;
+
+        if (joueur == 1) {
+            couleurJoueur = "🟦";
+
+        }
+        else {
+            couleurJoueur = "\uD83D\uDFE5";
+
         }
 
 
+        boolean deplacementFais = false;
+
+
+        while (deplacementFais == false){
+            System.out.println("Déplacez votre pion : ");
+            System.out.println("Appuyez sur 1 pour aller a gauche");
+            System.out.println("Appuyez sur 2 pour aller en haut");
+            System.out.println("Appuyez sur 3 pour aller en bas");
+            System.out.println("Appuyez sur 4 pour aller a droite");
+            int deplacement = sc.nextInt();
+
+
+            if(deplacement == 1) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 11; j++) {
+                        if (tableau[i][j] == couleurJoueur) {
+                            tableau[i][j] = "⬜";
+                            tableau[i][j - 1] = couleurJoueur;
+                            deplacementFais = true;
+                            j = 11;
+                            i = 11;
+                        }
+                    }
+                }
+            }
+
+            else if(deplacement == 2) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 11; j++) {
+                        if (tableau[i][j] == couleurJoueur) {
+                            tableau[i][j] = "⬜";
+                            tableau[i - 1][j] = couleurJoueur;
+                            deplacementFais = true;
+                            j = 11;
+                            i = 11;
+                        }
+                    }
+                }
+            }
+
+            else if(deplacement == 3) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 11; j++) {
+                        if (tableau[i][j] == couleurJoueur) {
+
+                            if (tableau[i + 1][j] != "⬛" || tableau[i + 1][j] != ""){
+
+                            }
+                            tableau[i][j] = "⬜";
+                            tableau[i + 1][j] = couleurJoueur;
+                            deplacementFais = true;
+                            j = 11;
+                            i = 11;
+                        }
+                    }
+                }
+            }
+
+            else if(deplacement == 4) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 11; j++) {
+                        if (tableau[i][j] == couleurJoueur) {
+                            tableau[i][j] = "⬜";
+                            tableau[i][j + 1] = couleurJoueur;
+                            deplacementFais = true;
+                            j = 11;
+                            i = 11;
+                        }
+                    }
+                }
+            }
+            else{
+                    affichageTableau(tableau);
+                    System.out.println("Veuillez entrer un entier valide");
+            }
+        }
+    affichageTableau(tableau);
     }
+
+    public static void destructionCase(String tableau[][]){
+        System.out.println("Détruisez une case (Pour se faire, entrez les index des lignes et colonnes de la case voulue");
+        System.out.println("Ligne de la case : ");
+        int ligne = sc.nextInt();
+        System.out.println("Colonne de la case : ");
+        int colonne =  sc.nextInt();
+
+        tableau[ligne -1][colonne -1] = "⬛";
+        affichageTableau(tableau);
+
+    }
+
 
     public static void main(String[] args) {
         menuPrincipal();
